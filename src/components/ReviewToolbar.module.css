@@ -1,0 +1,171 @@
+.toolbar {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 10px 11px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .92);
+  box-shadow: 0 4px 15px rgba(48, 73, 113, .035);
+}
+
+.caseSummary,
+.workflowIcon,
+.actions,
+.statusSelect,
+.statusSelect span,
+.actionButton,
+.shortcutButton {
+  display: flex;
+  align-items: center;
+}
+
+.caseSummary {
+  min-width: 0;
+  gap: 8px;
+}
+
+.workflowIcon {
+  width: 29px;
+  height: 29px;
+  justify-content: center;
+  flex: 0 0 auto;
+  border-radius: 8px;
+  color: #356fc9;
+  background: #edf4ff;
+}
+
+.caseSummary > div:last-child {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.kicker {
+  color: #6f86a8;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.caseSummary strong {
+  overflow: hidden;
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.caseSummary span:last-child {
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actions {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.statusSelect {
+  gap: 6px;
+  padding: 0 8px;
+  min-height: 31px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: #fbfcfe;
+}
+
+.statusSelect span {
+  color: #8190a3;
+  font-size: 9px;
+  font-weight: 750;
+}
+
+.statusSelect select {
+  min-width: 100px;
+  border: 0;
+  outline: 0;
+  color: var(--text);
+  background: transparent;
+  font: inherit;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.statusSelect:focus-within {
+  border-color: #99b7e7;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, .08);
+}
+
+.actionButton,
+.shortcutButton {
+  min-height: 31px;
+  gap: 5px;
+  padding: 0 8px;
+  border: 1px solid #d6e1f0;
+  border-radius: 7px;
+  color: #526c93;
+  background: #fff;
+  font: inherit;
+  font-size: 9px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.actionButton:hover:not(:disabled),
+.shortcutButton:hover {
+  border-color: #afc5e8;
+  color: #275cae;
+  background: #f4f8ff;
+}
+
+.actionButtonActive {
+  border-color: #b9e2ca;
+  color: #28734d;
+  background: #effaf3;
+}
+
+.actionButton:disabled {
+  cursor: not-allowed;
+  opacity: .5;
+}
+
+.shortcutButton {
+  color: #73839a;
+  background: #f8fafc;
+}
+
+@media (max-width: 1100px) {
+  .toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .actions { justify-content: flex-start; }
+}
+
+@media (max-width: 600px) {
+  .toolbar { padding: 10px; }
+  .actions { width: 100%; }
+  .statusSelect { flex: 1 1 100%; justify-content: space-between; }
+  .statusSelect select { flex: 1; }
+  .actionButton,
+  .shortcutButton { flex: 1 1 auto; justify-content: center; }
+}
+
+@media (max-width: 390px) {
+  .actionButton span,
+  .shortcutButton span { display: none; }
+  .actionButton,
+  .shortcutButton { flex: 0 0 32px; padding: 0; }
+}

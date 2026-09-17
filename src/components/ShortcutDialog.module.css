@@ -1,0 +1,109 @@
+.backdrop {
+  position: fixed;
+  z-index: 70;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(23, 32, 51, .42);
+}
+
+.dialog {
+  width: min(370px, 100%);
+  padding: 20px;
+  border: 1px solid #cbd5e1;
+  border-radius: 13px;
+  background: var(--surface);
+  box-shadow: 0 24px 70px rgba(23, 32, 51, .22);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.kicker {
+  color: var(--accent);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.header h2 {
+  margin: 4px 0 0;
+  color: var(--text);
+  font-size: 17px;
+  letter-spacing: -.02em;
+}
+
+.header button {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 7px;
+  color: #7d8ca0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.header button:hover { color: var(--text); background: var(--surface-subtle); }
+
+.dialog > p {
+  margin: 8px 0 16px;
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+.shortcutList {
+  display: grid;
+  gap: 7px;
+  padding: 11px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.shortcutRow {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  align-items: center;
+  gap: 9px;
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+.shortcutRow kbd {
+  width: fit-content;
+  min-width: 42px;
+  padding: 4px 7px;
+  border: 1px solid #cbd8ea;
+  border-bottom-width: 2px;
+  border-radius: 5px;
+  color: #3d5f93;
+  background: #f4f8ff;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 750;
+  text-align: center;
+}
+
+.closeButton {
+  width: 100%;
+  min-height: 35px;
+  margin-top: 15px;
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  color: #fff;
+  background: var(--accent);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.closeButton:hover { border-color: #1d4ed8; background: #1d4ed8; }

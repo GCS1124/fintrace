@@ -1,0 +1,24 @@
+:root {
+  --canvas: #f6f8fc;
+  --surface: #ffffff;
+  --surface-subtle: #f0f4fa;
+  --text: #172033;
+  --text-muted: #5f6b7a;
+  --border: #dce3ee;
+  --accent: #2563eb;
+  --accent-soft: #eff6ff;
+  --monitor: #526174;
+  --review: #8a5700;
+  --review-soft: #fff7e6;
+  --high: #b42318;
+  --high-soft: #fef3f2;
+  --radius: 12px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+}

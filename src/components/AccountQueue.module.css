@@ -1,0 +1,296 @@
+.panel {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 17px 14px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.panelHeading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 2px 14px;
+}
+
+.kicker {
+  margin-bottom: 4px;
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.panel h2 {
+  margin: 0;
+  color: var(--text);
+  font-size: 16px;
+  letter-spacing: -0.015em;
+}
+
+.count {
+  min-width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: 7px;
+  color: var(--accent);
+  background: var(--accent-soft);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.filters {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  padding-bottom: 8px;
+}
+
+.queueSummary {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 2px 11px;
+  color: #8290a3;
+  font-size: 9px;
+}
+
+.queueSummary strong {
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 10px;
+}
+
+.searchBox,
+.selectBox {
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 9px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-muted);
+  background: #fbfcfe;
+}
+
+.searchBox:focus-within,
+.selectBox:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.searchBox input,
+.selectBox select {
+  min-width: 0;
+  flex: 1;
+  border: 0;
+  outline: 0;
+  color: var(--text);
+  background: transparent;
+  font: inherit;
+  font-size: 12px;
+}
+
+.searchBox input::placeholder {
+  color: #8290a3;
+}
+
+.selectBox select {
+  cursor: pointer;
+}
+
+.clearSearch {
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  color: var(--text-muted);
+  background: transparent;
+  cursor: pointer;
+}
+
+.clearSearch:hover {
+  color: var(--text);
+  background: var(--surface-subtle);
+}
+
+.filterNotice {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 6px;
+  margin: 0 0 9px;
+  padding: 8px 9px;
+  border: 1px solid #f3d49a;
+  border-radius: 8px;
+  color: var(--review);
+  background: var(--review-soft);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.filterNotice button,
+.emptyQueue button {
+  padding: 0;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 750;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.queueList {
+  min-height: 0;
+  overflow: auto;
+  padding: 1px 1px 2px;
+}
+
+.queueItem {
+  width: 100%;
+  display: block;
+  margin: 0 0 7px;
+  padding: 11px 10px 10px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  color: var(--text);
+  text-align: left;
+  background: transparent;
+  cursor: pointer;
+}
+
+.queueItem:hover {
+  border-color: #c9d5e8;
+  background: #fbfcff;
+}
+
+.queueItemSelected {
+  border-color: #b9cdf7;
+  background: var(--accent-soft);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.queueTopline,
+.queueMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.accountGroup {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.watchIcon { color: var(--accent); }
+.unwatchedIcon { color: #b3bfce; }
+
+.accountId {
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 750;
+  letter-spacing: 0.01em;
+}
+
+.priority {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--monitor);
+  font-size: 10px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.priority strong {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.priority_review {
+  color: var(--review);
+}
+
+.priority_high {
+  color: var(--high);
+}
+
+.queueMeta {
+  margin-top: 7px;
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+.reviewState {
+  padding: 2px 5px;
+  border-radius: 4px;
+  font-size: 8px;
+  font-weight: 750;
+}
+
+.review_open { color: #5f6b7a; background: #eef1f5; }
+.review_in_review { color: #365a99; background: #eaf2ff; }
+.review_ready_to_escalate { color: var(--review); background: var(--review-soft); }
+.review_closed { color: #28734d; background: #e9f7ee; }
+
+.queueAnchor {
+  display: block;
+  margin-top: 6px;
+  color: #8290a3;
+  font-size: 10px;
+}
+
+.emptyQueue {
+  padding: 28px 12px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.emptyQueueIcon {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 10px;
+  border-radius: 9px;
+  color: #8290a3;
+  background: var(--surface-subtle);
+}
+
+.emptyQueue strong {
+  display: block;
+  color: var(--text);
+  font-size: 12px;
+}
+
+.emptyQueue p {
+  margin: 6px 0 0;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.emptyQueue button {
+  margin-top: 10px;
+}
+
+@media (max-width: 420px) {
+  .filters { grid-template-columns: 1fr; }
+  .queueMeta { align-items: flex-start; flex-wrap: wrap; }
+}

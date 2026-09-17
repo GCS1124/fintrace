@@ -1,0 +1,48 @@
+.pulse {
+  display: grid;
+  grid-template-columns: minmax(220px, 1.1fr) minmax(420px, 2fr) auto;
+  align-items: center;
+  gap: 18px;
+  min-width: 0;
+  padding: 13px 15px;
+  border: 1px solid #d4e2f8;
+  border-radius: 13px;
+  background: linear-gradient(102deg, #fafdff, #f5f9ff 58%, #f4fbfa);
+  box-shadow: 0 7px 22px rgba(48, 90, 153, 0.05);
+}
+
+.pulseIntro,
+.pulseIntro > div,
+.metric,
+.metric > span,
+.coverage { display: flex; align-items: center; }
+.pulseIntro { min-width: 0; gap: 9px; }
+.pulseIcon { width: 29px; height: 29px; display: grid; place-items: center; flex: 0 0 auto; border: 1px solid #cfe0fc; border-radius: 9px; color: #3272df; background: #eaf2ff; }
+.pulseIntro > div:last-child { align-items: flex-start; flex-direction: column; min-width: 0; }
+.eyebrow { display: flex; align-items: center; gap: 5px; color: #3a72cb; font-size: 8px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.liveDot { width: 5px; height: 5px; border-radius: 50%; background: #3fc58c; box-shadow: 0 0 0 3px rgba(63, 197, 140, .12); }
+.pulseIntro strong { overflow: hidden; margin-top: 3px; color: #22314a; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.pulseIntro span:last-child { overflow: hidden; margin-top: 2px; color: #718199; font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
+
+.metricGrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 7px; min-width: 0; }
+.metric { min-width: 0; gap: 7px; padding: 6px 8px; border: 1px solid #e0e9f6; border-radius: 8px; background: rgba(255,255,255,.8); }
+.metricIcon { width: 23px; height: 23px; display: grid !important; place-items: center; flex: 0 0 auto; border-radius: 6px; color: #3979e4; background: #ebf3ff; }
+.metricHigh { color: #cf625a; background: #fff0ef; }.metricGraph { color: #715ecc; background: #f0edff; }.metricSafe { color: #31926d; background: #e9f9f1; }
+.metric > span:nth-child(2) { align-items: flex-start; flex-direction: column; min-width: 0; }
+.metric b { color: #23314a; font-family: var(--mono); font-size: 13px; line-height: 1; }
+.metric small { margin-top: 2px; overflow: hidden; color: #8290a3; font-size: 8px; text-overflow: ellipsis; white-space: nowrap; }
+.metricArrow { margin-left: auto; color: #b1bfd0; }
+.coverage { gap: 5px; flex: 0 0 auto; color: #718199; font-size: 9px; white-space: nowrap; }
+.coverage svg { color: #6c90c5; }.coverage b { color: #2e5d9f; font-family: var(--mono); }
+
+@media (max-width: 1150px) {
+  .pulse { grid-template-columns: minmax(210px, 1fr) minmax(390px, 1.8fr); }
+  .coverage { grid-column: 1 / -1; justify-content: flex-end; }
+}
+
+@media (max-width: 720px) {
+  .pulse { grid-template-columns: 1fr; gap: 11px; padding: 12px; }
+  .metricGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .coverage { grid-column: auto; justify-content: flex-start; }
+}
+

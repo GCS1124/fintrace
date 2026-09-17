@@ -1,0 +1,180 @@
+.panel {
+  min-width: 0;
+  padding: 14px 16px 13px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, .88);
+}
+
+.heading,
+.kicker,
+.cutoff,
+.metricGrid,
+.metric,
+.metricIcon,
+.chartHeader,
+.bars,
+.barGroup {
+  display: flex;
+  align-items: center;
+}
+
+.heading {
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.kicker {
+  gap: 5px;
+  margin-bottom: 3px;
+  color: #6a82a5;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.heading h2 {
+  margin: 0;
+  color: var(--text);
+  font-size: 15px;
+  letter-spacing: -.015em;
+}
+
+.cutoff {
+  gap: 5px;
+  color: #8290a3;
+  font-family: var(--mono);
+  font-size: 9px;
+  white-space: nowrap;
+}
+
+.metricGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 7px;
+  margin-top: 12px;
+}
+
+.metric {
+  min-width: 0;
+  gap: 7px;
+  padding: 8px;
+  border: 1px solid #e3e9f2;
+  border-radius: 8px;
+  background: #fbfcfe;
+}
+
+.metricIcon {
+  width: 25px;
+  height: 25px;
+  justify-content: center;
+  flex: 0 0 auto;
+  border-radius: 7px;
+}
+
+.metric > span:last-child {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.metric strong {
+  overflow: hidden;
+  color: var(--text);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.metric small {
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: 8px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.incoming { color: #28734d; background: #e9f7ee; }
+.outgoing { color: #a13d36; background: #fff0ef; }
+.links { color: #4169a3; background: #eaf2ff; }
+.evidence { color: #846000; background: #fff5d9; }
+
+.activityChart {
+  margin-top: 11px;
+  padding: 8px 9px 7px;
+  border-top: 1px solid var(--border);
+  background: #fbfcfe;
+}
+
+.chartHeader {
+  justify-content: space-between;
+  gap: 8px;
+  color: #8090a5;
+  font-size: 9px;
+}
+
+.chartHeader span:last-child {
+  font-family: var(--mono);
+  font-size: 8px;
+}
+
+.bars {
+  height: 59px;
+  align-items: stretch;
+  gap: 7px;
+  margin-top: 7px;
+}
+
+.barGroup {
+  min-width: 0;
+  flex: 1;
+  align-items: center;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.barTrack {
+  width: 100%;
+  height: 43px;
+  display: flex;
+  align-items: flex-end;
+  border-radius: 4px 4px 2px 2px;
+  background: #eef3fa;
+}
+
+.bar {
+  width: 100%;
+  min-height: 0;
+  border-radius: 4px 4px 2px 2px;
+  background: linear-gradient(180deg, #6f9be7, #3b6fc7);
+  transition: height 180ms ease;
+}
+
+.barGroup span {
+  color: #94a2b4;
+  font-family: var(--mono);
+  font-size: 8px;
+}
+
+.noActivity {
+  width: 100%;
+  display: grid;
+  place-items: center;
+  min-height: 53px;
+  color: #8492a5;
+  font-size: 10px;
+  text-align: center;
+}
+
+@media (max-width: 720px) {
+  .panel { padding: 13px 12px; }
+  .metricGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .heading { align-items: flex-start; flex-direction: column; gap: 4px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bar { transition: none; }
+}
