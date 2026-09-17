@@ -257,49 +257,75 @@ function AuthenticatedApp({ identity, onSignOut }: AuthenticatedAppProps) {
             onClearFilters={investigation.clearFilters}
           />
 
-          <section id="graph-panel" className={styles.graphPanel} aria-labelledby="graph-heading">
-            <div className={styles.panelHeader}>
-              <div>
-                <div className={styles.kicker}>Transaction graph</div>
-                <h2 id="graph-heading">Observed transaction trail</h2>
-              </div>
-              <div className={styles.graphHeaderMeta}>
-                <div className={styles.focusMeta}>
-                  <span>Focal account</span>
-                  <strong>{investigation.selectedFocalAccountId ?? '—'}</strong>
+          <div className={styles.graphColumn}>
+            <section id="graph-panel" className={styles.graphPanel} aria-labelledby="graph-heading">
+              <div className={styles.panelHeader}>
+                <div>
+                  <div className={styles.kicker}>Transaction graph</div>
+                  <h2 id="graph-heading">Observed transaction trail</h2>
                 </div>
-                <span className={styles.graphCounts}>{graphModel.nodes.length} accounts · {graphModel.edges.length} transfers</span>
-              </div>
-            </div>
-            <div className={styles.graphContext}>
-              <div>
-                <span>Current observation</span>
-                <strong>{observationLabel}</strong>
-              </div>
-              {investigation.currentCase ? (
-                <div className={`${styles.scoreChip} ${styles[`score_${investigation.currentCase.priority}`]}`}>
-                  <ShieldCheck size={13} aria-hidden="true" />
-                  {investigation.currentCase.score}/100 {investigation.currentCase.priority === 'high' ? 'High priority' : investigation.currentCase.priority}
+                <div className={styles.graphHeaderMeta}>
+                  <div className={styles.focusMeta}>
+                    <span>Focal account</span>
+                    <strong>{investigation.selectedFocalAccountId ?? '—'}</strong>
+                  </div>
+                  <span className={styles.graphCounts}>{graphModel.nodes.length} accounts · {graphModel.edges.length} transfers</span>
                 </div>
-              ) : (
-                <span className={styles.noCaseChip}>No qualifying case</span>
-              )}
-            </div>
-            <Suspense fallback={<div className={styles.graphLoading} role="status"><LoaderCircle size={18} className={styles.spin} />Loading relationship graph…</div>}>
-              <InvestigationGraph
-                model={graphModel}
-                selectedTransaction={selectedTransaction}
-                selectedNodeId={investigation.selectedNodeId}
-                onSelectTransaction={investigation.setSelectedTransactionId}
-                onSelectNode={investigation.setSelectedNodeId}
-                onFitView={() => undefined}
-              />
-            </Suspense>
-            <div className={styles.graphFootnote}>
-              <span>Click a node to highlight its visible connections or an arrow to inspect that transfer.</span>
-              <span>Graph display limit: 24 nodes / 60 edges.</span>
-            </div>
-          </section>
+              </div>
+              <div className={styles.graphContext}>
+                <div>
+                  <span>Current observation</span>
+                  <strong>{observationLabel}</strong>
+                </div>
+                {investigation.currentCase ? (
+                  <div className={`${styles.scoreChip} ${styles[`score_${investigation.currentCase.priority}`]}`}>
+                    <ShieldCheck size={13} aria-hidden="true" />
+                    {investigation.currentCase.score}/100 {investigation.currentCase.priority === 'high' ? 'High priority' : investigation.currentCase.priority}
+                  </div>
+                ) : (
+                  <span className={styles.noCaseChip}>No qualifying case</span>
+                )}
+              </div>
+              <Suspense fallback={<div className={styles.graphLoading} role="status"><LoaderCircle size={18} className={styles.spin} />Loading relationship graph…</div>}>
+                <InvestigationGraph
+                  model={graphModel}
+                  selectedTransaction={selectedTransaction}
+                  selectedNodeId={investigation.selectedNodeId}
+                  onSelectTransaction={investigation.setSelectedTransactionId}
+                  onSelectNode={investigation.setSelectedNodeId}
+                  onFitView={() => undefined}
+                />
+              </Suspense>
+              <div className={styles.graphFootnote}>
+                <span>Click a node to highlight its visible connections or an arrow to inspect that transfer.</span>
+                <span>Graph display limit: 24 nodes / 60 edges.</span>
+              </div>
+            </section>
+
+            <ReplayControls
+              index={investigation.replayIndex}
+              timeline={investigation.timeline}
+              asOfMs={investigation.asOfMs}
+              totalLoaded={investigation.dataset.transactions.length}
+              visibleCount={investigation.snapshot.visibleTransactions.length}
+              onReset={() => {
+                resetSaveState()
+                investigation.resetReplay()
+              }}
+              onPrevious={() => {
+                resetSaveState()
+                investigation.previousReplay()
+              }}
+              onNext={() => {
+                resetSaveState()
+                investigation.nextReplay()
+              }}
+              onChange={(index) => {
+                resetSaveState()
+                investigation.goToReplayIndex(index)
+              }}
+            />
+          </div>
 
           <EvidencePanel
             id="evidence-panel"
@@ -322,30 +348,6 @@ function AuthenticatedApp({ identity, onSignOut }: AuthenticatedAppProps) {
         <div id="ai-analyst-panel">
           <AiAnalyst context={aiContext} onSelectTransaction={investigation.setSelectedTransactionId} />
         </div>
-
-        <ReplayControls
-          index={investigation.replayIndex}
-          timeline={investigation.timeline}
-          asOfMs={investigation.asOfMs}
-          totalLoaded={investigation.dataset.transactions.length}
-          visibleCount={investigation.snapshot.visibleTransactions.length}
-          onReset={() => {
-            resetSaveState()
-            investigation.resetReplay()
-          }}
-          onPrevious={() => {
-            resetSaveState()
-            investigation.previousReplay()
-          }}
-          onNext={() => {
-            resetSaveState()
-            investigation.nextReplay()
-          }}
-          onChange={(index) => {
-            resetSaveState()
-            investigation.goToReplayIndex(index)
-          }}
-        />
 
         <footer className={styles.footer}>
           <span><ShieldCheck size={13} aria-hidden="true" /> FINTRACE supports human review; it does not confirm fraud.</span>

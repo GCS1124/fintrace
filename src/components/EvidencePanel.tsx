@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Activity, ChevronDown, Download, FileWarning, GitBranch, Info, NotebookPen, RotateCcw } from 'lucide-react'
+import { ChevronDown, Download, FileWarning, Info, NotebookPen } from 'lucide-react'
 import { formatRupees } from '../engine/money'
 import { formatTime } from '../utils/format'
 import type { AccountCase, FlowIntelligence, SignalResult, Transaction } from '../types'
@@ -59,62 +59,6 @@ function signalDetail(signal: SignalResult): string[] {
 function signalEvidence(signal: SignalResult): string {
   if (signal.evidenceTransactionIds.length === 0) return 'No supporting transfers at this cutoff.'
   return `Linked transfers: ${signal.evidenceTransactionIds.join(', ')}`
-}
-
-function IntelligenceSection({ intelligence }: { readonly intelligence: FlowIntelligence }) {
-  const [pathsOpen, setPathsOpen] = useState(false)
-  const observedSignals = intelligence.signals.filter((signal) => signal.status === 'observed')
-
-  return (
-    <div className={styles.intelligenceSection}>
-      <div className={styles.intelligenceHeader}>
-        <div>
-          <div className={styles.sectionLabel}>Graph intelligence</div>
-          <span className={styles.intelligenceEngine}>Deterministic trace engine · {intelligence.engineVersion}</span>
-        </div>
-        <div className={styles.intelligenceScore}>
-          <strong>{intelligence.riskScore}<small>/100</small></strong>
-          <span>context, not probability</span>
-        </div>
-      </div>
-
-      <div className={styles.intelligenceMetrics} aria-label="Graph intelligence summary">
-        <span><b>{intelligence.maxPathDepth}</b> max hops</span>
-        <span><b>{intelligence.observedPathCount}</b> traced paths</span>
-        <span><b>{intelligence.cycleCount}</b> cycles</span>
-        <span><b>{intelligence.directCounterpartyCount}</b> direct links</span>
-      </div>
-
-      {observedSignals.length > 0 ? (
-        <div className={styles.intelligenceSignals}>
-          {observedSignals.map((signal) => <span key={signal.id}><Activity size={11} aria-hidden="true" /> {signal.title}</span>)}
-        </div>
-      ) : null}
-
-      <button type="button" className={styles.flowDisclosure} onClick={() => setPathsOpen((open) => !open)} aria-expanded={pathsOpen}>
-        <span><GitBranch size={14} aria-hidden="true" /> Inspect traced paths <small>{intelligence.observedPathCount}</small></span>
-        <ChevronDown size={15} className={pathsOpen ? styles.chevronOpen : ''} aria-hidden="true" />
-      </button>
-
-      {pathsOpen ? (
-        <div className={styles.pathList}>
-          {intelligence.paths.length > 0 ? intelligence.paths.slice(0, 4).map((path) => (
-            <div key={path.pathId} className={styles.pathItem}>
-              <div className={styles.pathTopline}>
-                <strong>{path.accountIds.join(' → ')}</strong>
-                <span>{path.kind === 'cycle' ? <><RotateCcw size={11} aria-hidden="true" /> Cycle</> : `${path.depth} hops`}</span>
-              </div>
-              <div className={styles.pathMeta}>
-                <span>{formatRupees(path.bottleneckPaise)} observed bottleneck</span>
-                <code>{path.transactionIds.join(' · ')}</code>
-              </div>
-            </div>
-          )) : <p className={styles.noPaths}>No multi-hop chronological path is visible at this cutoff.</p>}
-          {intelligence.traceTruncated ? <p className={styles.traceNotice}>Trace capped for performance; displayed paths are not the full network.</p> : null}
-        </div>
-      ) : null}
-    </div>
-  )
 }
 
 function SignalRow({ signal }: { readonly signal: SignalResult }) {
@@ -193,8 +137,6 @@ export function EvidencePanel({
           <div className={styles.signalList}>
             {selectedCase.signals.map((signal) => <SignalRow key={signal.id} signal={signal} />)}
           </div>
-
-          {intelligence ? <IntelligenceSection intelligence={intelligence} /> : null}
 
           {scenarioNote ? (
             <div className={styles.scenarioNote} role="note">
