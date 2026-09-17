@@ -1,27 +1,22 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
-import { AlertTriangle, Database, LoaderCircle, ShieldCheck } from 'lucide-react'
+import { AlertTriangle, LoaderCircle, ShieldCheck } from 'lucide-react'
 import { useAuth, type AuthIdentity } from './auth/authContext'
 import { AuthLoadingScreen, AuthScreen } from './auth/AuthScreen'
 import { AppHeader } from './components/AppHeader'
 import { AccountQueue } from './components/AccountQueue'
-import { ActivitySummary } from './components/ActivitySummary'
 import { AiAnalyst } from './components/AiAnalyst'
 import { EmptyState } from './components/EmptyState'
 import { EvidencePanel } from './components/EvidencePanel'
 import { ImportDialog } from './components/ImportDialog'
 import { ReplayControls } from './components/ReplayControls'
-import { ReviewToolbar } from './components/ReviewToolbar'
 import { ShortcutDialog } from './components/ShortcutDialog'
-import { WorkspacePulse } from './components/WorkspacePulse'
 import { buildAiAnalysisContext } from './ai/buildAiContext'
 import { CSV_TEMPLATE } from './data/examples'
 import { buildCaseExport, downloadCaseExport } from './export/buildCaseExport'
-import { downloadEvidenceCsv } from './export/buildEvidenceCsv'
 import { buildGraphModel } from './graph/buildGraphModel'
 import { useInvestigation } from './hooks/useInvestigation'
 import { saveInvestigation } from './services/workspaceService'
-import type { AccountCase, FlowIntelligence, ReviewStatus } from './types'
-import { formatBytes, formatCount, formatTime } from './utils/format'
+import { formatTime } from './utils/format'
 import styles from './App.module.css'
 
 const InvestigationGraph = lazy(() => import('./components/InvestigationGraph').then(({ InvestigationGraph: graph }) => ({ default: graph })))
@@ -34,51 +29,6 @@ function downloadTemplate(): void {
   anchor.download = 'fintrace-transaction-template.csv'
   anchor.click()
   window.setTimeout(() => URL.revokeObjectURL(objectUrl), 0)
-}
-
-async function copyText(value: string): Promise<boolean> {
-  try {
-    if (navigator.clipboard?.writeText) {
-      await navigator.clipboard.writeText(value)
-      return true
-    }
-    const textarea = document.createElement('textarea')
-    textarea.value = value
-    textarea.setAttribute('readonly', 'true')
-    textarea.style.position = 'fixed'
-    textarea.style.opacity = '0'
-    document.body.appendChild(textarea)
-    textarea.select()
-    const copied = document.execCommand('copy')
-    textarea.remove()
-    return copied
-  } catch {
-    return false
-  }
-}
-
-function buildReviewerBrief(
-  focalAccountId: string,
-  selectedCase: AccountCase,
-  intelligence: FlowIntelligence | undefined,
-  reviewStatus: ReviewStatus,
-  watchlisted: boolean,
-  observationLabel: string,
-  note: string,
-): string {
-  const triggeredSignals = selectedCase.signals.filter((signal) => signal.status === 'triggered').map((signal) => signal.title)
-  const intelligenceSignals = intelligence?.signals.filter((signal) => signal.status === 'observed').map((signal) => signal.title) ?? []
-  return [
-    `FINTRACE reviewer brief · ${focalAccountId}`,
-    `Review score: ${selectedCase.score}/100 (${selectedCase.priority})`,
-    `Workflow: ${reviewStatus.replaceAll('_', ' ')}${watchlisted ? ' · Watchlisted' : ''}`,
-    `Observation cutoff: ${observationLabel}`,
-    `Configured signals: ${triggeredSignals.length > 0 ? triggeredSignals.join(', ') : 'None triggered at this cutoff'}`,
-    `Graph signals: ${intelligenceSignals.length > 0 ? intelligenceSignals.join(', ') : 'None observed'}`,
-    `Evidence rows: ${selectedCase.evidenceTransactionIds.length}`,
-    note.trim() ? `Session note: ${note.trim()}` : 'Session note: None recorded',
-    'Pattern evidence supports human review; it does not confirm fraud.',
-  ].join('\n')
 }
 
 interface AuthenticatedAppProps {
@@ -133,7 +83,6 @@ function AuthenticatedApp({ identity, onSignOut }: AuthenticatedAppProps) {
       : undefined,
     [currentNote, investigation.asOfMs, investigation.currentCase, investigation.currentIntelligence, investigation.selectedFocalAccountId, investigation.snapshot.visibleTransactions],
   )
-  const reviewCount = investigation.snapshot.cases.filter((item) => item.score >= 70).length
   const observationLabel = Number.isFinite(investigation.asOfMs)
     ? formatTime(investigation.asOfMs)
     : 'Before first transfer'
@@ -204,30 +153,6 @@ function AuthenticatedApp({ identity, onSignOut }: AuthenticatedAppProps) {
     )
     downloadCaseExport(payload)
     setExportMessage(`Snapshot exported for ${investigation.selectedFocalAccountId} at ${observationLabel}.`)
-  }
-
-  const handleExportEvidenceCsv = () => {
-    if (!investigation.selectedFocalAccountId) return
-    downloadEvidenceCsv(investigation.snapshot, investigation.selectedFocalAccountId, investigation.currentIntelligence)
-    setExportMessage(`Evidence CSV exported for ${investigation.selectedFocalAccountId}.`)
-  }
-
-  const handleCopyBrief = async () => {
-    if (!investigation.selectedFocalAccountId || !investigation.currentCase) return
-    const copied = await copyText(buildReviewerBrief(
-      investigation.selectedFocalAccountId,
-      investigation.currentCase,
-      investigation.currentIntelligence,
-      investigation.currentReviewStatus,
-      investigation.currentWatchlisted,
-      observationLabel,
-      currentNote,
-    ))
-    setExportMessage(copied ? `Reviewer brief copied for ${investigation.selectedFocalAccountId}.` : 'Clipboard access is unavailable in this browser.')
-  }
-
-  const focusSection = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
   const handleSaveCase = async () => {
@@ -311,76 +236,6 @@ function AuthenticatedApp({ identity, onSignOut }: AuthenticatedAppProps) {
       <AppHeader {...commonHeaderProps} />
 
       <main className={styles.content}>
-        <section className={styles.workspaceIntro} aria-labelledby="workspace-title">
-          <div>
-            <div className={styles.introEyebrow}>Investigation workbench <span className={styles.introBadge}>EXPLAINABLE BY DESIGN</span></div>
-            <h1 id="workspace-title">Review the flow behind the signal.</h1>
-            <p>Start with the prioritised queue, trace connected transfers, then capture the evidence that supports human review.</p>
-          </div>
-          <div className={styles.introMeta} aria-label="Current session status">
-            <span className={styles.sessionStatus}><i aria-hidden="true" /> Session ready</span>
-            <span className={styles.cutoffMeta}>Cutoff <strong>{observationLabel}</strong></span>
-          </div>
-        </section>
-
-        <section className={styles.datasetStrip} aria-label="Dataset context">
-          <div className={styles.datasetIdentity}>
-            <span className={styles.datasetStatus} aria-hidden="true"><Database size={13} /></span>
-            <div className={styles.datasetTitle}>
-              <strong>{investigation.dataset.sourceLabel}</strong>
-              <span className={styles.datasetKind}>{investigation.dataset.sourceKind === 'synthetic' ? 'Synthetic data' : 'Uploaded CSV'}</span>
-              <span className={styles.datasetDescription}>{investigation.dataset.description}</span>
-            </div>
-          </div>
-          <div className={styles.datasetStats}>
-            <span><b>{formatCount(investigation.dataset.transactions.length)}</b> loaded</span>
-            <span><b>{formatCount(investigation.snapshot.visibleTransactions.length)}</b> visible</span>
-            <span><b>{reviewCount}</b> review{reviewCount === 1 ? '' : 's'}</span>
-            <span><b>{investigation.replayIndex + 1}/{investigation.timeline.length}</b> step</span>
-            <span>{formatBytes(investigation.dataset.fileSizeBytes)}</span>
-            <span className={`${styles.engineStatus} ${investigation.analysisMode === 'remote' ? styles.engineRemote : styles.engineLocal}`}>
-              <i className={styles.engineDot} aria-hidden="true" />
-              {investigation.analysisMode === 'remote' ? 'API synced' : 'Local engine'}
-            </span>
-          </div>
-        </section>
-
-        {investigation.dataset.warnings.length > 0 ? (
-          <div className={styles.datasetWarning} role="status">
-            <AlertTriangle size={14} aria-hidden="true" />
-            <span>{investigation.dataset.warnings.join(' ')}</span>
-          </div>
-        ) : null}
-
-        <WorkspacePulse
-          cases={investigation.snapshot.cases}
-          intelligenceByAccount={investigation.intelligenceByAccount}
-          loadedTransactions={investigation.dataset.transactions.length}
-          visibleTransactions={investigation.snapshot.visibleTransactions}
-          analysisMode={investigation.analysisMode}
-        />
-
-        <ReviewToolbar
-          focalAccountId={investigation.selectedFocalAccountId}
-          currentCase={investigation.currentCase}
-          reviewStatus={investigation.currentReviewStatus}
-          watchlisted={investigation.currentWatchlisted}
-          onStatusChange={investigation.setReviewStatus}
-          onToggleWatchlist={investigation.toggleWatchlist}
-          onCopyBrief={() => void handleCopyBrief()}
-          onExportCsv={handleExportEvidenceCsv}
-          onOpenShortcuts={() => setShortcutOpen(true)}
-          onFocusAi={() => focusSection('ai-analyst-panel')}
-        />
-
-        <ActivitySummary
-          focalAccountId={investigation.selectedFocalAccountId}
-          asOfMs={investigation.asOfMs}
-          visibleTransactions={investigation.snapshot.visibleTransactions}
-          selectedCase={investigation.currentCase}
-          intelligence={investigation.currentIntelligence}
-        />
-
         <section className={styles.workspace} aria-label="FINTRACE investigation workspace">
           <AccountQueue
             cases={investigation.filteredCases}
